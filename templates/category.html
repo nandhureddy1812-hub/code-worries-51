@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Select Exam & Course</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #4e73df, #1cc88a);
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.roadmap {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.roadmap::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #ddd;
+    z-index: 0;
+}
+
+.roadmap-step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.step-circle {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #999;
+}
+
+.step-circle.active {
+    background: #4e73df;
+    border-color: #4e73df;
+    color: white;
+}
+
+.step-label {
+    color: white;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+h1 {
+    text-align: center;
+    color: white;
+    margin-bottom: 30px;
+}
+
+.exams-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 30px;
+}
+
+.exam-card {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 3px solid transparent;
+}
+
+.exam-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.25);
+    border-color: #4e73df;
+}
+
+.exam-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.exam-radio {
+    width: 24px;
+    height: 24px;
+    border: 2px solid #4e73df;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.exam-radio.checked {
+    background: #4e73df;
+    color: white;
+    font-weight: bold;
+}
+
+.exam-titles {
+    flex: 1;
+}
+
+.exam-title {
+    font-size: 18px;
+    font-weight: bold;
+    color: #4e73df;
+    margin: 0;
+}
+
+.exam-subtitle {
+    font-size: 12px;
+    color: #999;
+    margin: 3px 0;
+}
+
+.exam-description {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 15px;
+    padding: 10px;
+    background: #f8f9fc;
+    border-radius: 8px;
+    border-left: 3px solid #4e73df;
+}
+
+.docs-label {
+    font-weight: bold;
+    color: #333;
+    font-size: 12px;
+    margin-bottom: 8px;
+}
+
+.docs-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.docs-list li {
+    padding: 6px 0;
+    color: #666;
+    font-size: 13px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.docs-list li:before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #1cc88a;
+    font-weight: bold;
+}
+
+.course-selection {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+}
+
+.course-selection h2 {
+    margin-top: 0;
+    color: #4e73df;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+select {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s;
+    box-sizing: border-box;
+}
+
+select:focus {
+    outline: none;
+    border-color: #4e73df;
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background: #4e73df;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 20px;
+}
+
+button:hover:not(:disabled) {
+    background: #2e59d9;
+}
+
+button:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px 30px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    backdrop-filter: blur(10px);
+}
+
+.header-title {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.logout-btn {
+    background: #dc3545;
+    color: white;
+    padding: 10px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.logout-btn:hover {
+    background: #c82333;
+}
+
+@media (max-width: 768px) {
+    .exams-grid {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <!-- HEADER -->
+    <div class="header">
+        <h1 class="header-title">Document Pre-Verification System</h1>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <!-- ROADMAP -->
+    <div class="roadmap">
+        <div class="roadmap-step">
+            <div class="step-circle">✓</div>
+            <div class="step-label">Login</div>
+        </div>
+        <div class="roadmap-step">
+            <div class="step-circle active">2</div>
+            <div class="step-label">Select Exam & Course</div>
+        </div>
+        <div class="roadmap-step">
+            <div class="step-circle">3</div>
+            <div class="step-label">Upload Documents</div>
+        </div>
+    </div>
+
+    <h1>Select Your Entrance Exam</h1>
+
+    <!-- EXAM CARDS -->
+    <div class="exams-grid">
+        {% for exam_key, exam_data in exam_info.items() %}
+        <div class="exam-card" data-exam="{{ exam_key }}">            
+            <div class="exam-header">
+                <div class="exam-radio" id="radio-{{ exam_key }}">
+                    <span id="check-{{ exam_key }}"></span>
+                </div>
+                <div class="exam-titles">
+                    <h3 class="exam-title">{{ exam_data.title }}</h3>
+                    <p class="exam-subtitle">{{ exam_data.full_name }}</p>
+                </div>
+            </div>
+            
+            <div class="exam-description">
+                {{ exam_data.description }}
+            </div>
+            
+            <div class="docs-label">Required Documents:</div>
+            <ul class="docs-list">
+                {% for doc in exam_data.documents %}
+                <li>{{ doc }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- COURSE SELECTION -->
+    <div class="course-selection">
+        <h2>Select Your Course</h2>
+        
+        <form action="/documents" method="POST" id="courseForm">
+            <input type="hidden" name="exam" id="exam_input" value="">
+            
+            <div class="form-group">
+                <label for="course">Course:</label>
+                <select name="course" id="course" required>
+                    <option value="">-- Select Course --</option>
+                </select>
+            </div>
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button type="button" id="saveBtn" onclick="saveAndContinue()" style="flex: 1; background: #1cc88a;">Save & Next</button>
+                <button type="submit" id="nextBtn" disabled style="flex: 1;">Next</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+const courseOptions = {
+    "ugcet": ["BTech", "Agriculture"],
+    "pgcet": ["MBA", "MCA"]
+};
+
+let selectedExam = null;
+
+function selectExam(exam) {
+    // Update selected exam
+    selectedExam = exam;
+    document.getElementById('exam_input').value = exam;
+    
+    // Update radio button styling
+    document.querySelectorAll('.exam-radio').forEach(el => {
+        el.classList.remove('checked');
+        el.innerHTML = '';
+    });
+    document.getElementById('radio-' + exam).classList.add('checked');
+    
+    
+    // Update course dropdown
+    const courseSelect = document.getElementById('course');
+    courseSelect.innerHTML = '<option value="">-- Select Course --</option>';
+    courseSelect.value = '';
+    
+    if (courseOptions[exam]) {
+        courseOptions[exam].forEach(course => {
+            const option = document.createElement('option');
+            option.value = course;
+            option.text = course;
+            courseSelect.appendChild(option);
+        });
+    }
+    
+    // Reset submit button
+    document.getElementById('submitBtn').disabled = true;
+}
+
+function checkFormValidity() {
+    const examSelected = selectedExam && document.getElementById('exam_input').value;
+    const courseSelected = document.getElementById('course').value;
+    
+    if (examSelected && courseSelected) {
+        document.getElementById('saveBtn').disabled = false;
+        document.getElementById('nextBtn').disabled = false;
+    } else {
+        document.getElementById('saveBtn').disabled = true;
+        document.getElementById('nextBtn').disabled = true;
+    }
+}
+
+function saveAndContinue() {
+    const exam = document.getElementById('exam_input').value;
+    const course = document.getElementById('course').value;
+    
+    if (exam && course) {
+        // Save to session/storage
+        sessionStorage.setItem('selectedExam', exam);
+        sessionStorage.setItem('selectedCourse', course);
+        
+        // Submit the form
+        document.getElementById('courseForm').submit();
+    }
+}
+
+function logout() {
+    fetch('/logout', {
+        method: 'POST'
+    }).then(response => {
+        window.location.href = '/';
+    });
+}
+
+// Wait for DOM to be ready before attaching event listener
+document.addEventListener('DOMContentLoaded', function() {
+    // Add click event listeners to exam cards
+    document.querySelectorAll('.exam-card').forEach(card => {
+        card.addEventListener('click', function() {
+            const examKey = this.getAttribute('data-exam');
+            selectExam(examKey);
+        });
+    });
+    
+    const courseSelect = document.getElementById('course');
+    if (courseSelect) {
+        courseSelect.addEventListener('change', checkFormValidity);
+    }
+});
+</script>
+
+</body>
+</html>

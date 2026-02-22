@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Upload Documents</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #4e73df, #1cc88a);
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.roadmap {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.roadmap::before {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: #ddd;
+    z-index: 0;
+}
+
+.roadmap-step {
+    flex: 1;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+.step-circle {
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 10px;
+    border-radius: 50%;
+    background: white;
+    border: 3px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #999;
+}
+
+.step-circle.completed {
+    background: #1cc88a;
+    border-color: #1cc88a;
+    color: white;
+}
+
+.step-circle.active {
+    background: #4e73df;
+    border-color: #4e73df;
+    color: white;
+}
+
+.step-label {
+    color: white;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.main-content {
+    display: flex;
+    gap: 20px;
+}
+
+.sidebar {
+    width: 300px;
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+}
+
+.sidebar h3 {
+    margin-top: 0;
+    color: #4e73df;
+    font-size: 18px;
+}
+
+.sidebar-item {
+    margin-bottom: 15px;
+    color: #666;
+    font-size: 14px;
+}
+
+.sidebar-item strong {
+    color: #4e73df;
+    display: block;
+    margin-bottom: 3px;
+}
+
+.progress-container {
+    margin-top: 20px;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4e73df, #1cc88a);
+    width: 0%;
+    transition: width 0.3s;
+}
+
+.progress-text {
+    text-align: center;
+    font-weight: bold;
+    color: #4e73df;
+    margin-top: 8px;
+    font-size: 16px;
+}
+
+.content {
+    flex: 1;
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+}
+
+.content h2 {
+    margin-top: 0;
+    color: #4e73df;
+}
+
+.doc-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    transition: all 0.3s;
+}
+
+.doc-item.uploaded {
+    background: #f0f9ff;
+    border-color: #1cc88a;
+}
+
+.doc-name {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.doc-checkbox {
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.checkbox-label {
+    font-weight: bold;
+    color: #333;
+}
+
+.doc-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.file-input-wrapper {
+    position: relative;
+    overflow: hidden;
+    display: inline-block;
+}
+
+.file-input-wrapper input[type=file] {
+    position: absolute;
+    left: -9999px;
+}
+
+.btn-upload {
+    padding: 8px 15px;
+    background: #4e73df;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: background 0.3s;
+}
+
+.btn-upload:hover {
+    background: #2e59d9;
+}
+
+.status-badge {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status-badge.pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.status-badge.completed {
+    background: #d4edda;
+    color: #155724;
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 12px;
+    background: #1cc88a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 20px;
+    transition: background 0.3s;
+}
+
+.btn-submit:hover:not(:disabled) {
+    background: #1aa876;
+}
+
+.btn-submit:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 15px 30px;
+    border-radius: 10px;
+    margin-bottom: 30px;
+    backdrop-filter: blur(10px);
+}
+
+.header-title {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    margin: 0;
+}
+
+.logout-btn {
+    background: #dc3545;
+    color: white;
+    padding: 10px 25px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.logout-btn:hover {
+    background: #c82333;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <!-- HEADER -->
+    <div class="header">
+        <h1 class="header-title">Document Pre-Verification System</h1>
+        <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <!-- ROADMAP -->
+    <div class="roadmap">
+        <div class="roadmap-step">
+            <div class="step-circle completed">✓</div>
+            <div class="step-label">Login</div>
+        </div>
+        <div class="roadmap-step">
+            <div class="step-circle completed">✓</div>
+            <div class="step-label">Select Exam & Course</div>
+        </div>
+        <div class="roadmap-step">
+            <div class="step-circle active">3</div>
+            <div class="step-label">Upload Documents</div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <h3>Summary</h3>
+            <div class="sidebar-item">
+                <strong>Exam</strong>
+                {{ exam.upper() }}
+            </div>
+            <div class="sidebar-item">
+                <strong>Course</strong>
+                {{ course }}
+            </div>
+            <div class="sidebar-item">
+                <strong>Total Documents</strong>
+                <span id="total-count">{{ documents|length }}</span>
+            </div>
+            <div class="sidebar-item">
+                <strong>Uploaded</strong>
+                <span id="uploaded-count">0</span>
+            </div>
+            <div class="sidebar-item">
+                <strong>Remaining</strong>
+                <span id="remaining-count">{{ documents|length }}</span>
+            </div>
+            
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                </div>
+                <div class="progress-text" id="progress-text">0%</div>
+            </div>
+        </div>
+
+        <!-- CONTENT -->
+        <div class="content">
+            <h2>Upload Required Documents</h2>
+
+            {% for doc in documents %}
+            <div class="doc-item" id="doc-{{ loop.index }}">
+                <div class="doc-name">
+                    <input type="checkbox" class="doc-checkbox" id="check-{{ loop.index }}" disabled>
+                    <label class="checkbox-label" for="check-{{ loop.index }}">{{ doc }}</label>
+                </div>
+                <div class="doc-actions">
+                    <span class="status-badge pending" id="badge-{{ loop.index }}">Not Uploaded</span>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="file-{{ loop.index }}" onchange="uploadFile({{ loop.index }}, '{{ doc }}')">
+                        <button type="button" class="btn-upload" onclick="document.getElementById('file-{{ loop.index }}').click()">Choose File</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button type="button" class="btn-submit" onclick="goBack()" style="flex: 1; background: #6c757d;">Back</button>
+                <button type="button" class="btn-submit" id="save-btn" onclick="saveDraft()" style="flex: 1; background: #ffc107; color: #333;">Save Draft</button>
+                <button class="btn-submit" id="submit-btn" disabled style="flex: 1;">Complete Submission</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+const totalDocs = {{ documents|length }};
+let uploadedCount = 0;
+
+function uploadFile(index, docName) {
+    const fileInput = document.getElementById(`file-${index}`);
+    const file = fileInput.files[0];
+    
+    if (!file) return;
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('doc_name', docName);
+    
+    fetch("/upload", {
+    method: "POST",
+    body: formData
+})
+.then(res => res.json())
+.then(data => {
+    alert(
+        data.document + "\nStatus: " + data.status +
+        "\nConfidence: " + data.confidence + "%"
+    );
+});
+}
+
+function updateProgress() {
+    const percentage = Math.round((uploadedCount / totalDocs) * 100);
+    const remaining = totalDocs - uploadedCount;
+    
+    document.getElementById('uploaded-count').textContent = uploadedCount;
+    document.getElementById('remaining-count').textContent = remaining;
+    document.getElementById('progress-fill').style.width = percentage + '%';
+    document.getElementById('progress-text').textContent = percentage + '%';
+    
+    if (uploadedCount === totalDocs) {
+        document.getElementById('submit-btn').disabled = false;
+    }
+}
+
+document.getElementById('submit-btn').addEventListener('click', function() {
+    window.location.href = '/result?uploaded=' + uploadedCount + '&total=' + totalDocs;
+});
+
+function goToResult() {
+    window.location.href = '/result?uploaded=' + uploadedCount + '&total=' + totalDocs;
+}
+
+function goBack() {
+    window.location.href = '/category';
+}
+
+function saveDraft() {
+    alert('Draft saved! You can continue later.');
+    // Store current upload progress
+    sessionStorage.setItem('uploadProgress', JSON.stringify({
+        uploaded: uploadedCount,
+        total: totalDocs
+    }));
+}
+
+function logout() {
+    fetch('/logout', {
+        method: 'POST'
+    }).then(response => {
+        window.location.href = '/';
+    });
+}
+</script>
+
+</body>
+</html>

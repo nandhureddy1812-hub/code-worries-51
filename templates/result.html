@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Submission Complete</title>
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #4e73df, #1cc88a);
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.card {
+    background: white;
+    padding: 50px;
+    border-radius: 15px;
+    box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+.success-icon {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #1cc88a;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+    margin: 0 auto 20px;
+}
+
+h1 {
+    color: #4e73df;
+    margin: 0 0 10px;
+}
+
+.subtitle {
+    color: #666;
+    font-size: 16px;
+    margin-bottom: 30px;
+}
+
+.stats {
+    display: flex;
+    justify-content: space-around;
+    margin: 30px 0;
+    padding: 20px 0;
+    border-top: 2px solid #e0e0e0;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.stat-item {
+    flex: 1;
+}
+
+.stat-number {
+    font-size: 32px;
+    font-weight: bold;
+    color: #4e73df;
+}
+
+.stat-label {
+    color: #999;
+    font-size: 12px;
+    margin-top: 5px;
+}
+
+.progress-section {
+    margin: 30px 0;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 15px;
+    background: #e0e0e0;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4e73df, #1cc88a);
+    width: {{ percentage }}%;
+    transition: width 0.5s;
+}
+
+.progress-text {
+    text-align: center;
+    font-weight: bold;
+    color: #4e73df;
+    font-size: 18px;
+}
+
+.message {
+    background: #f0f9ff;
+    border-left: 4px solid #1cc88a;
+    padding: 15px;
+    margin: 20px 0;
+    border-radius: 5px;
+    color: #155724;
+}
+
+.actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 30px;
+}
+
+button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.btn-home {
+    background: #4e73df;
+    color: white;
+}
+
+.btn-home:hover {
+    background: #2e59d9;
+}
+
+.btn-download {
+    background: #1cc88a;
+    color: white;
+}
+
+.btn-download:hover {
+    background: #1aa876;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.card {
+    animation: slideIn 0.5s ease-out;
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <div class="card">
+        <div class="success-icon">✓</div>
+        
+        <h1>Submission Complete!</h1>
+        <p class="subtitle">Your documents have been successfully submitted.</p>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">{{ uploaded_count }}</div>
+                <div class="stat-label">Documents Uploaded</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ total_docs }}</div>
+                <div class="stat-label">Total Required</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ percentage }}%</div>
+                <div class="stat-label">Complete</div>
+            </div>
+        </div>
+        
+        <div class="progress-section">
+            <div class="progress-bar">
+                <div class="progress-fill"></div>
+            </div>
+            <div class="progress-text">{{ percentage }}% Complete</div>
+        </div>
+        
+        {% if percentage == 100 %}
+        <div class="message">
+            ✓ All documents have been uploaded successfully! Your submission is complete.
+        </div>
+        {% else %}
+        <div class="message">
+            You have uploaded {{ uploaded_count }} out of {{ total_docs }} documents. Please upload the remaining documents to complete your submission.
+        </div>
+        {% endif %}
+        
+        <div class="actions">
+            <button class="btn-home" onclick="window.location.href='/category'">Select Different Course</button>
+            <button class="btn-download" onclick="window.location.href='/'">Back to Home</button>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

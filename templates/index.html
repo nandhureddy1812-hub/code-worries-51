@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DocVerify AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #4e73df, #1cc88a);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .card {
+            background: white;
+            width: 400px;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        p {
+            text-align: center;
+            color: gray;
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            background-color: #4e73df;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #2e59d9;
+        }
+
+        .result {
+            margin-top: 20px;
+            background: #f8f9fc;
+            padding: 10px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+<form action="/upload" method="POST" enctype="multipart/form-data">
+    <input type="file" name="file" required>
+    <button type="submit">Upload Document</button>
+</form>
+<div class="card">
+    <h1>DocVerify AI</h1>
+    <p>Verify Smart. Apply Confident.</p>
+    <p>Welcome, {{ session['user'] }}!</p>
+    <a href="/logout" style="float: right; color: #4e73df;">Logout</a>
+    <br><br>
+    <form action="/documents" method="POST">
+
+        <label>Select Exam:</label>
+        <select id="exam" name="exam" onchange="showCourseOptions()" required>
+            <option value="">-- Select Exam --</option>
+            <option value="ugcet">UGCET</option>
+            <option value="pgcet">PGCET</option>
+            <option value="dcet">DCET</option>
+        </select>
+
+        <div id="courseDiv" style="display:none;">
+            <label>Select Course:</label>
+            <select id="course" name="course" required></select>
+        </div>
+
+        <button type="submit">Next</button>
+    </form>
+
+    {% if result %}
+        <div class="result">
+            <h3>Verification Result:</h3>
+            <ul>
+                {% for message in result %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+</div>
+
+
+<script>
+function showCourseOptions() {
+    var exam = document.getElementById("exam").value;
+    var courseDiv = document.getElementById("courseDiv");
+    var courseSelect = document.getElementById("course");
+
+    courseSelect.innerHTML = "";
+
+    var options = [];
+
+    if (exam === "ugcet") {
+        options = ["BTech", "Agriculture", "Pharmacy", "BSc Nursing"];
+    } 
+    else if (exam === "pgcet") {
+        options = ["MTech", "MBA", "MCA"];
+    } 
+    else if (exam === "dcet") {
+        options = ["Diploma Engineering", "Lateral Entry BTech"];
+    } 
+    else {
+        courseDiv.style.display = "none";
+        return;
+    }
+
+    courseDiv.style.display = "block";
+
+    options.forEach(function(option) {
+        var newOption = document.createElement("option");
+        newOption.value = option;
+        newOption.textContent = option;
+        courseSelect.appendChild(newOption);
+    });
+}
+</script>
+
+</body>
+</html>
